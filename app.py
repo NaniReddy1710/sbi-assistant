@@ -35,6 +35,7 @@ if not check_password():
     st.stop()
 
 # ---- Sidebar ----
+# ---- Sidebar ----
 with st.sidebar:
     st.header("Setup")
     uploaded = st.file_uploader("Sales file", type=["csv", "xlsx"])
@@ -46,10 +47,8 @@ if not uploaded:
     st.info("👈 Upload a sales file in the sidebar to begin. "
             "Columns needed: date, product, quantity, amount, customer.")
     st.stop()
-   if not uploaded:
-    st.info("👈 Upload a sales file in the sidebar to begin. "
-            "Columns needed: date, product, quantity, amount, customer.")
-    st.stop()
+
+st.info(f"📁 Analyzing file: {uploaded.name}")
 
 st.info(f"📁 Analyzing file: {uploaded.name}")
 
