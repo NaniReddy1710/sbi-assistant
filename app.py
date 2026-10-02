@@ -52,7 +52,7 @@ if uploaded.name.endswith(".csv"):
     df = pd.read_csv(uploaded)
 else:
     df = pd.read_excel(uploaded)
-    needed = ["date", "product", "quantity", "amount", "customer"]
+needed = ["date", "product", "quantity", "amount", "customer"]
 df = df[[c for c in needed if c in df.columns]]
 
 df["date"] = pd.to_datetime(df["date"])
