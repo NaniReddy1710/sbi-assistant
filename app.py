@@ -46,6 +46,7 @@ if not uploaded:
     st.info("👈 Upload a sales file in the sidebar to begin. "
             "Columns needed: date, product, quantity, amount, customer.")
     st.stop()
+    st.info(f"📁 Analyzing file: {uploaded.name}")
 
 # ---- Load and clean ----
 if uploaded.name.endswith(".csv"):
