@@ -52,12 +52,37 @@ if uploaded.name.endswith(".csv"):
     df = pd.read_csv(uploaded)
 else:
     df = pd.read_excel(uploaded)
-needed = ["date", "product", "quantity", "amount", "customer"]
-df = df[[c for c in needed if c in df.columns]]
+cols = list(df.columns)
+with st.sidebar:
+    st.subheader("Match your columns")
+    date_col = st.selectbox("Date column", cols)
+    amount_col = st.selectbox("Sales amount column", cols)
+    product_col = st.selectbox("Product column", cols)
+    customer_col = st.selectbox("Customer column (optional)", ["(none)"] + cols)
 
-df["date"] = pd.to_datetime(df["date"])
+picked = [date_col, amount_col, product_col]
+names = ["date", "amount", "product"]
+if customer_col != "(none)":
+    picked.append(customer_col)
+    names.append("customer")
+
+if len(set(picked)) < len(picked):
+    st.warning("Pick a different column for each box in the sidebar.")
+    st.stop()
+
+df = df[picked].copy()
+df.columns = names
+
+df["date"] = pd.to_datetime(df["date"], errors="coerce")
+df["amount"] = pd.to_numeric(
+    df["amount"].astype(str).str.replace(r"[^0-9.\-]", "", regex=True),
+    errors="coerce",
+)
 df = df.dropna(subset=["date", "amount"])
 
+if df.empty:
+    st.error("No valid rows found. Check that the date and amount columns are right.")
+    st.stop()
 # ---- Calculations ----
 total_revenue = df["amount"].sum()
 total_orders = len(df)
